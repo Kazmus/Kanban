@@ -34,7 +34,7 @@ function buildCard(card) {
 function addCard() {
     const text = $('#card-input').val().trim();
     if (!text) return;
-    const card = { id: uid(), text, tag: activeTag };
+    const card = { id: uid(), text, tag: activeTag.attr("data-tag") };
     //state[activeCol].push(card);
     //saveState();
     //render();
@@ -48,7 +48,7 @@ function render() {
         $cards.empty();
         state[col].forEach(card => $cards.append(buildCard(card)));
     });
-    //updateCounts();
+    //countCards();
     //initDragDrop();
 }
 
@@ -58,7 +58,18 @@ function tagSelection() {
             activeTag.removeClass("active");
         }
         activeTag = $(this).addClass("active");
-    })
+    });
+}
+
+function deleteCard(card) {
+    card.remove();
+}
+
+function countCards() {
+    ['todo', 'inprogress', 'done'].forEach(col => {
+        var count = document.getElementById("col-"+col).childElementCount;
+        $("#col-"+col).siblings(".col-header").children(".col-count").text(count);
+    });
 }
 
 function uid() {
@@ -71,11 +82,17 @@ $(function () {
         openModal();
     });
 
-    $("#modal-confirm").on("click", function () {
-        addCard();
-    });
-
     $("#modal-cancel").on("click", function () {
         closeModal();
+    });
+
+    $("#modal-confirm").on("click", function () {
+        addCard();
+        countCards();
+    });
+
+    $(document).on("click", ".card-delete", function() {
+        deleteCard($(this).parents(".card"));
+        countCards();
     });
 })
