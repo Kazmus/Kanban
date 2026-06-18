@@ -1,6 +1,22 @@
 //globals
+var state = loadState();
 var activeTag = null;
 var activeCol = null;
+
+const defaults = {
+    todo: [
+        { id: uid(), text: 'Créer la structure HTML', tag: 'dev' },
+        { id: uid(), text: 'Définir la palette de couleurs', tag: 'design' },
+    ],
+    inprogress: [
+        { id: uid(), text: 'Implémenter le drag & drop', tag: 'dev' },
+    ],
+    done: [
+        { id: uid(), text: 'Poser le projet', tag: 'none' },
+    ]
+};
+
+if (!state) state = defaults;
 
 function openModal() {
     $(".modal-overlay").addClass("open").show();
@@ -48,8 +64,8 @@ function render() {
         $cards.empty();
         state[col].forEach(card => $cards.append(buildCard(card)));
     });
-    //countCards();
-    //initDragDrop();
+    countCards();
+    initDragDrop();
 }
 
 function tagSelection() {
@@ -67,9 +83,61 @@ function deleteCard(card) {
 
 function countCards() {
     ['todo', 'inprogress', 'done'].forEach(col => {
-        var count = document.getElementById("col-"+col).childElementCount;
-        $("#col-"+col).siblings(".col-header").children(".col-count").text(count);
+        var count = document.getElementById("col-" + col).childElementCount;
+        $("#col-" + col).siblings(".col-header").children(".col-count").text(count);
     });
+}
+
+function initDragDrop() {
+    $('.card').draggable({
+        revert: 'invalid',
+        zIndex: 999,
+        cursor: 'grabbing',
+        helper: 'clone',
+        opacity: 0.85,
+        start(e, ui) {
+            console.log(e);
+            $(this).addClass('ui-draggable-dragging');
+            ui.helper.css({ width: $(this).outerWidth() });
+        },
+        stop(e, ui) {
+            $(this).removeClass('ui-draggable-dragging');
+        }
+    });
+
+    $('.cards').droppable({
+        accept: '.card',
+        hoverClass: 'ui-droppable-hover',
+        drop(e, ui) {
+            const $col = $(this);
+            const toCol = $col.closest('.column').data('col');
+            const cardId = ui.draggable.data('id');
+
+            // Find & remove from source
+            let card = null;
+            ['todo', 'inprogress', 'done'].forEach(col => {
+                const idx = state[col].findIndex(c => c.id === cardId);
+                if (idx !== -1) {
+                    card = state[col].splice(idx, 1)[0];
+                }
+            });
+
+            if (card) {
+                state[toCol].push(card);
+                saveState();
+                render();
+                // Highlight the newly dropped card
+                $col.find(`.card[data-id="${card.id}"]`).addClass('just-dropped');
+            }
+        }
+    });
+}
+
+function loadState() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
 }
 
 function uid() {
@@ -91,8 +159,10 @@ $(function () {
         countCards();
     });
 
-    $(document).on("click", ".card-delete", function() {
+    $(document).on("click", ".card-delete", function () {
         deleteCard($(this).parents(".card"));
         countCards();
     });
+
+    render();
 })
