@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -15,34 +15,34 @@
 
   <main class="board" id="board">
 
-    <div class="column">
+    <div class="column" data-col="todo">
       <div class="col-header">
         <span class="col-dot dot-todo"></span>
         <h2>To Do</h2>
         <span class="col-count">0</span>
       </div>
       <div class="cards" id="col-todo"></div>
-      <button class="add-btn">+ Add card</button>
+      <button class="add-btn" data-col="todo">+ Add card</button>
     </div>
 
-    <div class="column">
+    <div class="column" data-col="inprogress">
       <div class="col-header">
         <span class="col-dot dot-inprogress"></span>
         <h2>In Progress</h2>
         <span class="col-count">0</span>
       </div>
       <div class="cards" id="col-inprogress"></div>
-      <button class="add-btn">+ Add card</button>
+      <button class="add-btn" data-col="inprogress">+ Add card</button>
     </div>
 
-    <div class="column">
+    <div class="column" data-col="done">
       <div class="col-header">
         <span class="col-dot dot-done"></span>
         <h2>Done</h2>
         <span class="col-count">0</span>
       </div>
       <div class="cards" id="col-done"></div>
-      <button class="add-btn">+ Add card</button>
+      <button class="add-btn" data-col="done">+ Add card</button>
     </div>
 
   </main>
