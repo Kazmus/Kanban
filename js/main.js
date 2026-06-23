@@ -1,5 +1,4 @@
 $(function () {
-
     // ─── State ─────────────────────────────────────────────────────────
     const STORAGE_KEY = 'kanban_v1';
     let state = loadState();
