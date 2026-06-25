@@ -1,5 +1,12 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: /projects/kanban/public/login.php');
+    exit;
+}
+?>
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,14 +14,12 @@
   <link rel="stylesheet" href="/projects/kanban/css/style.css" />
 </head>
 <body>
-
   <header>
     <h1>Board</h1>
     <p class="subtitle">Drag cards between columns</p>
   </header>
 
   <main class="board" id="board">
-
     <div class="column" data-col="todo">
       <div class="col-header">
         <span class="col-dot dot-todo"></span>
@@ -66,6 +71,7 @@
     </div>
   </div>
 
+  <script>const currentUser = <?= json_encode($_SESSION['username'] ?? '') ?>;</script>
   <script src="/projects/kanban/js/jquery-4.0.0.min.js"></script>
   <script src="/projects/kanban/js/jquery-ui.min.js"></script>
   <script src="/projects/kanban/js/main.js"></script>

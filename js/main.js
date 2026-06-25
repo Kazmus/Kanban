@@ -1,27 +1,8 @@
 $(function () {
-    // ─── State ─────────────────────────────────────────────────────────
-    const STORAGE_KEY = 'kanban_v1';
-    let state = loadState();
+    let state = { todo: [], inprogress: [], done: [] };
     let activeCol = null;
     let activeTag = 'none';
 
-    // ─── Default cards (first visit) ──────────────────────────────────
-    const defaults = {
-        todo: [
-            { id: uid(), text: 'Créer la structure HTML', tag: 'dev' },
-            { id: uid(), text: 'Définir la palette de couleurs', tag: 'design' },
-        ],
-        inprogress: [
-            { id: uid(), text: 'Implémenter le drag & drop', tag: 'dev' },
-        ],
-        done: [
-            { id: uid(), text: 'Poser le projet', tag: 'none' },
-        ]
-    };
-
-    if (!state) state = defaults;
-
-    // ─── Render ────────────────────────────────────────────────────────
     function render() {
         ['todo', 'inprogress', 'done'].forEach(col => {
             const $cards = $(`#col-${col}`);
@@ -34,22 +15,20 @@ $(function () {
 
     function buildCard(card) {
         const tagColors = {
-            design: '#7c6af7',
-            dev: '#3ecfcf',
-            bug: '#f76a6a',
-            none: 'transparent'
+            design: '#7c6af7', dev: '#3ecfcf', bug: '#f76a6a', none: 'transparent'
         };
         const color = tagColors[card.tag] || 'transparent';
         return $(`
-      <div class="card" data-id="${card.id}">
-        <p class="card-text">${escHtml(card.text)}</p>
-        <div class="card-footer">
-          <span class="card-tag" data-tag="${card.tag}"
-            style="--tag-color:${color}">${card.tag}</span>
-          <button class="card-delete" title="Delete">✕</button>
+        <div class="card" data-id="${card.id}">
+            <p class="card-text">${escHtml(card.text)}</p>
+            <div class="card-footer">
+            <span class="card-tag" data-tag="${card.tag}"
+                style="--tag-color:${color}">${card.tag}</span>
+            <span class="card-user">${escHtml(card.username || '')}</span>
+            <button class="card-delete" title="Delete">✕</button>
+            </div>
         </div>
-      </div>
-    `);
+        `);
     }
 
     function updateCounts() {
@@ -59,7 +38,6 @@ $(function () {
         });
     }
 
-    // ─── Drag & Drop ──────────────────────────────────────────────────
     function initDragDrop() {
         $('.card').draggable({
             revert: 'invalid',
@@ -82,7 +60,7 @@ $(function () {
             drop(e, ui) {
                 const $col = $(this);
                 const toCol = $col.closest('.column').data('col');
-                const cardId = ui.draggable.data('id');
+                const cardId = String(ui.draggable.attr('data-id'));
 
                 // Find & remove from source
                 let card = null;
@@ -95,16 +73,14 @@ $(function () {
 
                 if (card) {
                     state[toCol].push(card);
-                    saveState();
                     render();
-                    // Highlight the newly dropped card
                     $col.find(`.card[data-id="${card.id}"]`).addClass('just-dropped');
+                    api({ action: 'move', id: card.id, status: toCol });   // ← persist
                 }
             }
         });
     }
 
-    // ─── Add card modal ────────────────────────────────────────────────
     $(document).on('click', '.add-btn', function () {
         activeCol = $(this).data('col');
         activeTag = 'none';
@@ -132,12 +108,12 @@ $(function () {
         if (e.key === 'Escape') closeModal();
     });
 
-    function addCard() {
+    async function addCard() {
         const text = $('#card-input').val().trim();
         if (!text) return;
-        const card = { id: uid(), text, tag: activeTag };
-        state[activeCol].push(card);
-        saveState();
+        const status = activeCol;
+        const res = await api({ action: 'add', text, tag: activeTag, status });
+        state[status].push({ id: String(res.id), text, tag: activeTag, username: currentUser });
         render();
         closeModal();
     }
@@ -147,38 +123,50 @@ $(function () {
         activeCol = null;
     }
 
-    // ─── Delete card ───────────────────────────────────────────────────
     $(document).on('click', '.card-delete', function (e) {
         e.stopPropagation();
-        const id = $(this).closest('.card').data('id');
+        const id = String($(this).closest('.card').attr('data-id'));
         ['todo', 'inprogress', 'done'].forEach(col => {
             state[col] = state[col].filter(c => c.id !== id);
         });
-        saveState();
         render();
+        api({ action: 'delete', id });   // ← persist
     });
 
-    // ─── Persistence ──────────────────────────────────────────────────
-    function saveState() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-    function loadState() {
-        try {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            return raw ? JSON.parse(raw) : null;
-        } catch {
-            return null;
-        }
+
+    async function loadCards() {
+        const res = await fetch('/projects/kanban/json/data.php');
+        const cards = await res.json();
+
+        const grouped = { todo: [], inprogress: [], done: [] };
+        cards.forEach(card => {
+            const col = grouped[card.status] ? card.status : 'todo';
+            grouped[col].push({
+                id: card.id,
+                text: card.text,
+                tag: (card.tag || 'none').toLowerCase(),
+                username: card.username  
+            });
+        });
+        return grouped;
     }
 
-    // ─── Helpers ──────────────────────────────────────────────────────
-    function uid() {
-        return Math.random().toString(36).slice(2, 9);
-    }
     function escHtml(str) {
         return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    // ─── Init ──────────────────────────────────────────────────────────
-    render();
+    async function api(payload) {
+        const res = await fetch('/projects/kanban/json/actions.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        return res.json();
+    }
+
+    async function init() {
+        state = await loadCards();
+        render();
+    }
+    init();
 });

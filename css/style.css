@@ -147,6 +147,17 @@ header h1 {
   align-items: center;
 }
 
+.card-user {
+    font-size: 0.75rem;
+    color: #8a8f98;
+    margin-left: auto;
+    margin-right: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+}
+
 .card-tag {
   font-size: 0.7rem;
   font-weight: 600;
@@ -308,6 +319,43 @@ header h1 {
   color: #fff;
 }
 #modal-confirm:hover { background: #6a58e0; }
+
+.login-board {
+  display: flex;
+  padding: 1.5rem 2rem 2rem;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.login {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  min-height: 400px;
+  width: 30%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+form input, form button {
+  height: 40px;
+  width: 250px;
+  border-radius: 15px;
+  text-align: center;
+}
 
 /* ─── Responsive ───────────────────────────────── */
 @media (max-width: 700px) {
