@@ -39,45 +39,54 @@ $(function () {
     }
 
     function initDragDrop() {
-        $('.card').draggable({
-            revert: 'invalid',
-            zIndex: 999,
-            cursor: 'grabbing',
-            helper: 'clone',
-            opacity: 0.85,
-            start(e, ui) {
-                $(this).addClass('ui-draggable-dragging');
-                ui.helper.css({ width: $(this).outerWidth() });
-            },
-            stop(e, ui) {
-                $(this).removeClass('ui-draggable-dragging');
-            }
-        });
+        ['todo', 'inprogress', 'done'].forEach(col => {
+            const el = document.getElementById(`col-${col}`);
+            if (!el) return;
 
-        $('.cards').droppable({
-            accept: '.card',
-            hoverClass: 'ui-droppable-hover',
-            drop(e, ui) {
-                const $col = $(this);
-                const toCol = $col.closest('.column').data('col');
-                const cardId = String(ui.draggable.attr('data-id'));
+            // Destroy previous instance to avoid duplicate listeners on re-render
+            if (el._sortable) el._sortable.destroy();
 
-                // Find & remove from source
-                let card = null;
-                ['todo', 'inprogress', 'done'].forEach(col => {
-                    const idx = state[col].findIndex(c => c.id === cardId);
-                    if (idx !== -1) {
-                        card = state[col].splice(idx, 1)[0];
+            el._sortable = Sortable.create(el, {
+                group: 'kanban',          // shared group = cross-column drag
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                dragClass: 'sortable-drag',
+                delay: 0,                 // no delay — works with both mouse and touch
+                delayOnTouchOnly: false,
+                touchStartThreshold: 3,   // px before drag activates (avoids accidental drags on scroll)
+
+                onEnd(evt) {
+                    const cardId = String(evt.item.getAttribute('data-id'));
+                    const fromCol = evt.from.closest('.column').dataset.col;
+                    const toCol = evt.to.closest('.column').dataset.col;
+
+                    if (fromCol === toCol && evt.oldIndex === evt.newIndex) return;
+
+                    // Move card in state
+                    let card = null;
+                    ['todo', 'inprogress', 'done'].forEach(c => {
+                        const idx = state[c].findIndex(x => x.id === cardId);
+                        if (idx !== -1) card = state[c].splice(idx, 1)[0];
+                    });
+
+                    if (card) {
+                        // Insert at correct position in target column
+                        const targetIndex = evt.newIndex;
+                        state[toCol].splice(targetIndex, 0, card);
+
+                        updateCounts();
+
+                        // Visual feedback
+                        evt.item.classList.add('just-dropped');
+                        setTimeout(() => evt.item.classList.remove('just-dropped'), 600);
+
+                        if (fromCol !== toCol) {
+                            api({ action: 'move', id: card.id, status: toCol });
+                        }
                     }
-                });
-
-                if (card) {
-                    state[toCol].push(card);
-                    render();
-                    $col.find(`.card[data-id="${card.id}"]`).addClass('just-dropped');
-                    api({ action: 'move', id: card.id, status: toCol });   // ← persist
                 }
-            }
+            });
         });
     }
 
@@ -145,7 +154,7 @@ $(function () {
                 id: card.id,
                 text: card.text,
                 tag: (card.tag || 'none').toLowerCase(),
-                username: card.username  
+                username: card.username
             });
         });
         return grouped;

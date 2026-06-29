@@ -73,7 +73,7 @@ if (!isset($_SESSION['user_id'])) {
 
   <script>const currentUser = <?= json_encode($_SESSION['username'] ?? '') ?>;</script>
   <script src="/projects/kanban/js/jquery-4.0.0.min.js"></script>
-  <script src="/projects/kanban/js/jquery-ui.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
   <script src="/projects/kanban/js/main.js"></script>
 </body>
 </html>
