@@ -5,11 +5,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $email = $_POST['email'] ?? '';
 
-    $user = checkLogin($username, $password);
+    $user = checkUsername($username);
     if ($user) {
-        $error = "Invalid username or password";
+        $error = "Username already exists";
+        echo $error;
     } else { 
-        addUser($username, $password);
-        exit;
+        $password = password_hash($password, PASSWORD_DEFAULT);
+        addUser($username, $password, $email);
+        header('Location: /projects/kanban/index.php');
     }
 }

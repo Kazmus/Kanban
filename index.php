@@ -18,6 +18,7 @@ if (!isset($_SESSION['user_id'])) {
   <header>
     <h1>Board</h1>
     <p class="subtitle">Drag cards between columns</p>
+    <button><a href="/projects/kanban/public/disconnect.php">Disconnect</a></button>
   </header>
 
   <main>
@@ -59,7 +60,7 @@ if (!isset($_SESSION['user_id'])) {
         <p class="subtitle">Create new users</p>
       </div>
       <div class="create-user">
-        <form action="create-user.php" method="POST">
+        <form action="index.php" method="POST">
             <input type="text" name="username" id="username" placeholder="Username" required>
             <input type="password" name="password" id="password" placeholder="Password" required>
             <input type="email" name="password" id="email" placeholder="Email" required>

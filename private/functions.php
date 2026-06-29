@@ -56,7 +56,7 @@ function closeDB(mysqli $conn) {
 function checkLogin(string $username,string $password) {
     $conn = connectToDB();
     $stmt = mysqli_prepare($conn,
-        "SELECT `id`, `username`, `password`, `email` FROM `login` WHERE `username` = ?");
+        "SELECT `id`, `username`, `password` FROM `login` WHERE `username` = ?");
     mysqli_stmt_bind_param($stmt, "s", $username);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -73,9 +73,26 @@ function checkLogin(string $username,string $password) {
     return false;
 }
 
-function addUser(string $username,string $password) {
-    // $conn = connectToDB();
+function checkUsername(string $username) {
+    $conn = connectToDB();
+    $stmt = mysqli_prepare($conn,
+        "SELECT `id`, `username` FROM `login` WHERE `username` = ?");
+    mysqli_stmt_bind_param($stmt, "s", $username);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $user = mysqli_fetch_assoc($result);
+    closeDB($conn);
 
-    echo "User created";
-    
+    if (!$user) return false;
+
+    return true;
+}
+
+function addUser(string $username, string $password, string $email) {
+    $conn = connectToDB();
+    $stmt = mysqli_prepare($conn,
+        "INSERT INTO `login` (`username`, `password`, `email`) VALUES (?, ?, ?)");
+    mysqli_stmt_bind_param($stmt, "sss", $username, $password, $email);
+    mysqli_stmt_execute($stmt);
+    closeDB($conn);
 }
