@@ -1,5 +1,6 @@
 <?php
 session_start();
+require __DIR__ . "/../../../private/kanban/create-user.php";
 if (!isset($_SESSION['user_id'])) {
     header('Location: /projects/kanban/public/login.php');
     exit;
@@ -19,39 +20,52 @@ if (!isset($_SESSION['user_id'])) {
     <p class="subtitle">Drag cards between columns</p>
   </header>
 
-  <main class="board" id="board">
-    <div class="column" data-col="todo">
-      <div class="col-header">
-        <span class="col-dot dot-todo"></span>
-        <h2>To Do</h2>
-        <span class="col-count">0</span>
+  <main>
+    <section class="board" id="board">
+      <div class="column" data-col="todo">
+        <div class="col-header">
+          <span class="col-dot dot-todo"></span>
+          <h2>To Do</h2>
+          <span class="col-count">0</span>
+        </div>
+        <div class="cards" id="col-todo"></div>
+        <button class="add-btn" data-col="todo">+ Add card</button>
       </div>
-      <div class="cards" id="col-todo"></div>
-      <button class="add-btn" data-col="todo">+ Add card</button>
-    </div>
 
-    <div class="column" data-col="inprogress">
-      <div class="col-header">
-        <span class="col-dot dot-inprogress"></span>
-        <h2>In Progress</h2>
-        <span class="col-count">0</span>
+      <div class="column" data-col="inprogress">
+        <div class="col-header">
+          <span class="col-dot dot-inprogress"></span>
+          <h2>In Progress</h2>
+          <span class="col-count">0</span>
+        </div>
+        <div class="cards" id="col-inprogress"></div>
+        <button class="add-btn" data-col="inprogress">+ Add card</button>
       </div>
-      <div class="cards" id="col-inprogress"></div>
-      <button class="add-btn" data-col="inprogress">+ Add card</button>
-    </div>
 
-    <div class="column" data-col="done">
-      <div class="col-header">
-        <span class="col-dot dot-done"></span>
-        <h2>Done</h2>
-        <span class="col-count">0</span>
+      <div class="column" data-col="done">
+        <div class="col-header">
+          <span class="col-dot dot-done"></span>
+          <h2>Done</h2>
+          <span class="col-count">0</span>
+        </div>
+        <div class="cards" id="col-done"></div>
+        <button class="add-btn" data-col="done">+ Add card</button>
       </div>
-      <div class="cards" id="col-done"></div>
-      <button class="add-btn" data-col="done">+ Add card</button>
-    </div>
+    </section>
 
-    <section class="administration">
-      
+    <section id="Administration">
+      <div class="administration-board">
+        <h2>Administration</h2>
+        <p class="subtitle">Create new users</p>
+      </div>
+      <div class="create-user">
+        <form action="create-user.php" method="POST">
+            <input type="text" name="username" id="username" placeholder="Username" required>
+            <input type="password" name="password" id="password" placeholder="Password" required>
+            <input type="email" name="password" id="email" placeholder="Email" required>
+            <button type="submit">Add user</button>
+        </form>
+      </div>
     </section>
   </main>
 

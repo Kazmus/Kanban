@@ -36,11 +36,13 @@ header h1 {
   font-weight: 700;
   letter-spacing: -0.5px;
   color: #fff;
+  text-align: center;
 }
 .subtitle {
   color: var(--muted);
   font-size: 0.85rem;
   margin-top: 2px;
+  text-align: center;
 }
 
 /* Board */
@@ -371,6 +373,17 @@ form input, form button {
   text-align: center;
 }
 
+/* Create accounts */
+.administration-board {
+  padding: 2rem 2.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+.create-user {
+  margin-top: 20px;
+  text-align: center;
+}
 
 /* ─── Responsive ───────────────────────────────── */
 @media (max-width: 700px) {

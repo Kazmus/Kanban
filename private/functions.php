@@ -63,13 +63,19 @@ function checkLogin(string $username,string $password) {
     $user = mysqli_fetch_assoc($result);
     closeDB($conn);
 
-    if (!$user) {
-        return false;
-    }
+    if (!$user) return false;
+
     if (password_verify($password, $user['password'])) {
         unset($user['password']);
         return $user;
     }
 
     return false;
+}
+
+function addUser(string $username,string $password) {
+    // $conn = connectToDB();
+
+    echo "User created";
+    
 }
