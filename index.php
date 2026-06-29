@@ -50,6 +50,9 @@ if (!isset($_SESSION['user_id'])) {
       <button class="add-btn" data-col="done">+ Add card</button>
     </div>
 
+    <section class="administration">
+      
+    </section>
   </main>
 
   <!-- Add card modal -->
