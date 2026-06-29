@@ -18,7 +18,7 @@ if (!isset($_SESSION['user_id'])) {
   <header>
     <h1>Board</h1>
     <p class="subtitle">Drag cards between columns</p>
-    <button><a href="/projects/kanban/public/disconnect.php">Disconnect</a></button>
+    <a class="disconnect-btn" href="/projects/kanban/public/disconnect.php">Disconnect</a>
   </header>
 
   <main>
@@ -53,7 +53,9 @@ if (!isset($_SESSION['user_id'])) {
         <button class="add-btn" data-col="done">+ Add card</button>
       </div>
     </section>
-
+    <?php 
+    if ($_SESSION['type'] == "admin") {
+    ?>
     <section id="Administration">
       <div class="administration-board">
         <h2>Administration</h2>
@@ -63,11 +65,15 @@ if (!isset($_SESSION['user_id'])) {
         <form action="index.php" method="POST">
             <input type="text" name="username" id="username" placeholder="Username" required>
             <input type="password" name="password" id="password" placeholder="Password" required>
-            <input type="email" name="password" id="email" placeholder="Email" required>
+            <input type="email" name="email" id="email" placeholder="Email" required>
             <button type="submit">Add user</button>
         </form>
       </div>
     </section>
+    <?php
+    }
+    ?>
+    
   </main>
 
   <!-- Add card modal -->

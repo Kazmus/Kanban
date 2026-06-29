@@ -3,11 +3,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require __DIR__ . "/functions.php";
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
+    $type = $_POST['type'] ?? '';
 
     $user = checkLogin($username, $password);
     if ($user) {
         $_SESSION['user_id']  = $user['id'];
         $_SESSION['username'] = $user['username'];
+        $_SESSION['type'] = $user['type'];
         header('Location: /projects/kanban/index.php');
         exit;
     } else {

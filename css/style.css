@@ -30,7 +30,12 @@ body {
 header {
   padding: 2rem 2.5rem 1rem;
   border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
+
 header h1 {
   font-size: 1.6rem;
   font-weight: 700;
@@ -38,11 +43,42 @@ header h1 {
   color: #fff;
   text-align: center;
 }
+
 .subtitle {
   color: var(--muted);
   font-size: 0.85rem;
   margin-top: 2px;
   text-align: center;
+}
+
+.disconnect-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.12s ease, background 0.12s;
+  font-family: inherit;
+  letter-spacing: 0.01em;
+  margin-top: 20px;
+  text-decoration: none;
+  background-color: var(--text);
+  color: var(--accent);
+}
+
+.disconnect-btn:active {
+  transform: scale(0.97);
+}
+
+.disconnect-btn:hover {
+  background-color: var(--accent);
+  color: var(--text);
 }
 
 /* Board */
@@ -54,6 +90,7 @@ header h1 {
   flex: 1;
   align-items: start;
 }
+
 
 /* Column */
 .column {
