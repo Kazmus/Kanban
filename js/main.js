@@ -43,18 +43,17 @@ $(function () {
             const el = document.getElementById(`col-${col}`);
             if (!el) return;
 
-            // Destroy previous instance to avoid duplicate listeners on re-render
             if (el._sortable) el._sortable.destroy();
 
             el._sortable = Sortable.create(el, {
-                group: 'kanban',          // shared group = cross-column drag
+                group: 'kanban',
                 animation: 150,
                 ghostClass: 'sortable-ghost',
                 chosenClass: 'sortable-chosen',
                 dragClass: 'sortable-drag',
-                delay: 0,                 // no delay — works with both mouse and touch
+                delay: 0,
                 delayOnTouchOnly: false,
-                touchStartThreshold: 3,   // px before drag activates (avoids accidental drags on scroll)
+                touchStartThreshold: 3,
 
                 onEnd(evt) {
                     const cardId = String(evt.item.getAttribute('data-id'));
@@ -63,7 +62,6 @@ $(function () {
 
                     if (fromCol === toCol && evt.oldIndex === evt.newIndex) return;
 
-                    // Move card in state
                     let card = null;
                     ['todo', 'inprogress', 'done'].forEach(c => {
                         const idx = state[c].findIndex(x => x.id === cardId);
@@ -71,13 +69,11 @@ $(function () {
                     });
 
                     if (card) {
-                        // Insert at correct position in target column
                         const targetIndex = evt.newIndex;
                         state[toCol].splice(targetIndex, 0, card);
 
                         updateCounts();
 
-                        // Visual feedback
                         evt.item.classList.add('just-dropped');
                         setTimeout(() => evt.item.classList.remove('just-dropped'), 600);
 

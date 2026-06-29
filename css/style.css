@@ -329,9 +329,9 @@ header h1 {
 #modal-cancel:hover { color: var(--text); }
 #modal-confirm {
   background: var(--accent);
-  color: #fff;
+  color: var(--text);
 }
-#modal-confirm:hover { background: #6a58e0; }
+#modal-confirm:hover { background: var(--accent); }
 
 /* Login */
 .login-board {
