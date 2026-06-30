@@ -133,9 +133,18 @@ $(function () {
         api({ action: 'delete-card', id });
     });
 
-    $(document).on('click', '.delete-user-btn', function () {
-        const username = $(this).parent('td').siblings('.username').text();
-        api({ action: 'delete-user', username });
+    $(document).on('click', '.delete-user-btn', async function () {
+        const row = $(this).closest('tr');
+        const username = row.find('.username').text();
+
+        if (!confirm("Delete user " + username + " ?")) return;
+
+        const result = await api({ action: 'delete-user', username });
+        if (result.ok) {
+            row.remove();
+        } else {
+            alert('Failed to delete user.');
+        }
     });
 
     async function addCard() {

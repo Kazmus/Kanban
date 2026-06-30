@@ -441,18 +441,24 @@ form input {
 
 /* Admin */
 .admin-container {
-  display: flex;
-  justify-content: space-evenly;
-  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.2rem;
+  padding: 1.5rem 2rem 2rem;
+  flex: 1;
+  align-items: start;
 }
 
 table {
-  width: 50%;
   border-radius: var(--radius);
 }
 
 table, th, td {
   border:1px solid var(--border);
+}
+
+tr {
+  height: 30px;
 }
 
 th {
@@ -462,6 +468,7 @@ th {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
+  height: 50px;
 }
 
 td {
@@ -514,6 +521,8 @@ td {
 }
 
 /* Responsive */
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .board { grid-template-columns: 1fr; }
+
+  .admin-container { grid-template-columns: 1fr; }
 }
