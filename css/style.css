@@ -40,7 +40,7 @@ header h1 {
   font-size: 1.6rem;
   font-weight: 700;
   letter-spacing: -0.5px;
-  color: #fff;
+  color: var(--text);
   text-align: center;
 }
 

@@ -7,8 +7,8 @@ function connectToDB() {
 function getCards() {
     $conn = connectToDB();
     $sql = "SELECT card.id, card.text, card.tag, card.status, login.username
-            FROM `card`
-            JOIN `login` ON card.user_id = login.id";
+            FROM 'card'
+            JOIN 'login' ON card.user_id = login.id";
     $result = mysqli_query($conn, $sql);
 
     $cards = [];
@@ -25,7 +25,7 @@ function addCard(string $text, string $tag, string $status) {
     $user_id = $_SESSION['user_id'];
     $conn = connectToDB();
     $stmt = mysqli_prepare($conn,
-        "INSERT INTO `card` (`user_id`, `text`, `tag`, `status`) VALUES (?, ?, ?, ?)");
+        "INSERT INTO 'card' ('user_id', 'text', 'tag', 'status') VALUES (?, ?, ?, ?)");
     mysqli_stmt_bind_param($stmt, "ssss", $user_id, $text, $tag, $status);
     mysqli_stmt_execute($stmt);
     $newId = mysqli_insert_id($conn);
@@ -35,7 +35,7 @@ function addCard(string $text, string $tag, string $status) {
 
 function moveCard(int $id, string $status) {
     $conn = connectToDB();
-    $stmt = mysqli_prepare($conn, "UPDATE `card` SET `status` = ? WHERE `id` = ?");
+    $stmt = mysqli_prepare($conn, "UPDATE 'card' SET 'status' = ? WHERE 'id' = ?");
     mysqli_stmt_bind_param($stmt, "si", $status, $id);
     mysqli_stmt_execute($stmt);
     closeDB($conn);
@@ -43,7 +43,7 @@ function moveCard(int $id, string $status) {
 
 function deleteCard(int $id) {
     $conn = connectToDB();
-    $stmt = mysqli_prepare($conn, "DELETE FROM `card` WHERE `id` = ?");
+    $stmt = mysqli_prepare($conn, "DELETE FROM 'card' WHERE 'id' = ?");
     mysqli_stmt_bind_param($stmt, "i", $id);
     mysqli_stmt_execute($stmt);
     closeDB($conn);
@@ -56,7 +56,7 @@ function closeDB(mysqli $conn) {
 function checkLogin(string $username, string $password) {
     $conn = connectToDB();
     $stmt = mysqli_prepare($conn,
-        "SELECT `id`, `username`, `password`, `type` FROM `login` WHERE `username` = ?");
+        "SELECT 'id', 'username', 'password', 'type' FROM 'login' WHERE 'username' = ?");
     mysqli_stmt_bind_param($stmt, "s", $username);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -76,7 +76,7 @@ function checkLogin(string $username, string $password) {
 function checkUsername(string $username) {
     $conn = connectToDB();
     $stmt = mysqli_prepare($conn,
-        "SELECT `id`, `username` FROM `login` WHERE `username` = ?");
+        "SELECT 'id', 'username' FROM 'login' WHERE 'username' = ?");
     mysqli_stmt_bind_param($stmt, "s", $username);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -92,7 +92,7 @@ function addUser(string $username, string $password, string $email) {
     $defaultType = "user";
     $conn = connectToDB();
     $stmt = mysqli_prepare($conn,
-        "INSERT INTO `login` (`username`, `password`, `email`, `type`) VALUES (?, ?, ?, ?)");
+        "INSERT INTO 'login' ('username', 'password', 'email', 'type') VALUES (?, ?, ?, ?)");
     mysqli_stmt_bind_param($stmt, "ssss", $username, $password, $email, $defaultType);
     mysqli_stmt_execute($stmt);
     closeDB($conn);
@@ -100,7 +100,7 @@ function addUser(string $username, string $password, string $email) {
 
 function getUsers() {
     $conn = connectToDB();
-    $sql = "SELECT login.id, login.username, login.email, login.type FROM `login`";
+    $sql = "SELECT login.id, login.username, login.email, login.type FROM 'login'";
     $result = mysqli_query($conn, $sql);
 
     $users = [];
@@ -114,7 +114,7 @@ function getUsers() {
 
 function deleteUser(string $username) {
     $conn = connectToDB();
-    $stmt = mysqli_prepare($conn, "DELETE FROM `login` WHERE `username` = ?");
+    $stmt = mysqli_prepare($conn, "DELETE FROM 'login' WHERE 'username' = ?");
     mysqli_stmt_bind_param($stmt, "s", $username);
     mysqli_stmt_execute($stmt);
     closeDB($conn);
