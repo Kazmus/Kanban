@@ -6,16 +6,20 @@ $data = json_decode(file_get_contents('php://input'), true);
 $action = $data['action'] ?? '';
 
 switch ($action) {
-    case 'add':
+    case 'add-card':
         $id = addCard($data['text'], $data['tag'], $data['status']);
         echo json_encode(['ok' => true, 'id' => $id]);
         break;
-    case 'move':
+    case 'move-card':
         moveCard($data['id'], $data['status']);
         echo json_encode(['ok' => true]);
         break;
-    case 'delete':
+    case 'delete-card':
         deleteCard($data['id']);
+        echo json_encode(['ok' => true]);
+        break;
+    case 'delete-user':
+        deleteUser($data['username']);
         echo json_encode(['ok' => true]);
         break;
     default:

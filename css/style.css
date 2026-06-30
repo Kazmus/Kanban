@@ -472,6 +472,36 @@ td {
   color: var(--text);
 }
 
+.delete-user-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 75px;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  /* font-size: 14px; */
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.12s ease, background 0.12s;
+  font-family: inherit;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  background-color: var(--text);
+  color: var(--accent); 
+  margin-left: 10px;
+}
+
+.delete-user-btn:active {
+  transform: scale(0.97);
+}
+
+.delete-user-btn:hover {
+  background-color: var(--accent);
+  color: var(--text);
+}
+
 /* Create accounts */
 .administration-board {
   padding: 2rem 2.5rem 1rem;

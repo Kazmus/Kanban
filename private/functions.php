@@ -53,7 +53,7 @@ function closeDB(mysqli $conn) {
     mysqli_close($conn);
 }
 
-function checkLogin(string $username,string $password) {
+function checkLogin(string $username, string $password) {
     $conn = connectToDB();
     $stmt = mysqli_prepare($conn,
         "SELECT `id`, `username`, `password`, `type` FROM `login` WHERE `username` = ?");
@@ -110,6 +110,14 @@ function getUsers() {
     closeDB($conn);
 
     return $users;
+}
+
+function deleteUser(string $username) {
+    $conn = connectToDB();
+    $stmt = mysqli_prepare($conn, "DELETE FROM `login` WHERE `username` = ?");
+    mysqli_stmt_bind_param($stmt, "s", $username);
+    mysqli_stmt_execute($stmt);
+    closeDB($conn);
 }
 
 function var_dumpj($d, $e = null) {

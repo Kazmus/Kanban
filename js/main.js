@@ -1,7 +1,7 @@
 $(function () {
-    let state = { todo: [], inprogress: [], done: [] };
-    let activeCol = null;
-    let activeTag = 'none';
+    var state = { todo: [], inprogress: [], done: [] };
+    var activeCol = null;
+    var activeTag = 'none';
 
     function render() {
         ['todo', 'inprogress', 'done'].forEach(col => {
@@ -62,7 +62,7 @@ $(function () {
 
                     if (fromCol === toCol && evt.oldIndex === evt.newIndex) return;
 
-                    let card = null;
+                    var card = null;
                     ['todo', 'inprogress', 'done'].forEach(c => {
                         const idx = state[c].findIndex(x => x.id === cardId);
                         if (idx !== -1) card = state[c].splice(idx, 1)[0];
@@ -78,12 +78,21 @@ $(function () {
                         setTimeout(() => evt.item.classList.remove('just-dropped'), 600);
 
                         if (fromCol !== toCol) {
-                            api({ action: 'move', id: card.id, status: toCol });
+                            api({ action: 'move-card', id: card.id, status: toCol });
                         }
                     }
                 }
             });
         });
+    }
+
+    function closeModal() {
+        $('#modal-overlay').removeClass('open');
+        activeCol = null;
+    }
+
+    function escHtml(str) {
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
     $(document).on('click', '.add-btn', function () {
@@ -113,20 +122,6 @@ $(function () {
         if (e.key === 'Escape') closeModal();
     });
 
-    async function addCard() {
-        const text = $('#card-input').val().trim();
-        if (!text) return;
-        const status = activeCol;
-        const res = await api({ action: 'add', text, tag: activeTag, status });
-        state[status].push({ id: String(res.id), text, tag: activeTag, username: currentUser });
-        render();
-        closeModal();
-    }
-
-    function closeModal() {
-        $('#modal-overlay').removeClass('open');
-        activeCol = null;
-    }
 
     $(document).on('click', '.card-delete', function (e) {
         e.stopPropagation();
@@ -135,9 +130,23 @@ $(function () {
             state[col] = state[col].filter(c => c.id !== id);
         });
         render();
-        api({ action: 'delete', id });   // ← persist
+        api({ action: 'delete-card', id });
     });
 
+    $(document).on('click', '.delete-user-btn', function () {
+        const username = $(this).parent('td').siblings('.username').text();
+        api({ action: 'delete-user', username });
+    });
+
+    async function addCard() {
+        const text = $('#card-input').val().trim();
+        if (!text) return;
+        const status = activeCol;
+        const res = await api({ action: 'add-card', text, tag: activeTag, status });
+        state[status].push({ id: String(res.id), text, tag: activeTag, username: currentUser });
+        render();
+        closeModal();
+    }
 
     async function loadCards() {
         const res = await fetch('/projects/kanban/json/data-cards.php');
@@ -156,10 +165,6 @@ $(function () {
         return grouped;
     }
 
-    function escHtml(str) {
-        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-
     async function api(payload) {
         const result = await fetch('/projects/kanban/json/actions.php', {
             method: 'POST',
@@ -173,5 +178,6 @@ $(function () {
         state = await loadCards();
         render();
     }
+
     init();
 });

@@ -76,15 +76,22 @@ if (!isset($_SESSION['user_id'])) {
             <th>Username</th>
             <th>Email</th>
             <th>Type</th>
+            <th></th>
           </tr>
           <?php
           $users = require __DIR__ . "/public/get-users.php"; 
           foreach ($users as $key => $value) {
+            if ($value['type'] != "admin") {
+              $button = "<button class='delete-user-btn'>Delete</button>";
+            } else {
+              $button = "";
+            }
           ?>
             <tr>
-              <td><?php echo $value['username']; ?></td>
+              <td class="username"><?php echo $value['username'];?></td>
               <td><?php echo $value['email']; ?></td>
               <td><?php echo $value['type']; ?></td>
+              <td><?php echo $button;?></td>
             </tr>
           <?php
           }
@@ -95,7 +102,6 @@ if (!isset($_SESSION['user_id'])) {
     <?php
     }
     ?>
-    
   </main>
 
   <!-- Add card modal -->
