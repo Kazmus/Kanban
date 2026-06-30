@@ -403,11 +403,73 @@ form {
   align-items: center;
 }
 
-form input, form button {
+form input {
   height: 40px;
   width: 250px;
-  border-radius: 15px;
   text-align: center;
+  border-radius: 8px;
+}
+
+.login-btn, .create-user-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.12s ease, background 0.12s;
+  font-family: inherit;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  background-color: var(--text);
+  color: var(--accent);
+}
+
+.create-user-btn:active, .login-btn:active {
+  transform: scale(0.97);
+}
+
+.create-user-btn:hover, .login-btn:hover {
+  background-color: var(--accent);
+  color: var(--text);
+}
+
+/* Admin */
+.admin-container {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 20px;
+}
+
+table {
+  width: 50%;
+  border-radius: var(--radius);
+}
+
+table, th, td {
+  border:1px solid var(--border);
+}
+
+th {
+  background: var(--surface);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+
+td {
+  text-align: center;
+  background: var(--surface2);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--text);
 }
 
 /* Create accounts */
@@ -418,11 +480,10 @@ form input, form button {
 }
 
 .create-user {
-  margin-top: 20px;
   text-align: center;
 }
 
-/* ─── Responsive ───────────────────────────────── */
+/* Responsive */
 @media (max-width: 700px) {
   .board { grid-template-columns: 1fr; }
 }

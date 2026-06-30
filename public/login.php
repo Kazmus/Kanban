@@ -28,7 +28,7 @@ header('Pragma: no-cache');
             <form action="login.php" method="POST">
                 <input type="text" name="username" id="username" placeholder="Username" required>
                 <input type="password" name="password" id="password" placeholder="Password" required>
-                <button type="submit">Login</button>
+                <button class="login-btn" type="submit">Login</button>
             </form>
         </div>
     </main>

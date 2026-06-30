@@ -140,7 +140,7 @@ $(function () {
 
 
     async function loadCards() {
-        const res = await fetch('/projects/kanban/json/data.php');
+        const res = await fetch('/projects/kanban/json/data-cards.php');
         const cards = await res.json();
 
         const grouped = { todo: [], inprogress: [], done: [] };
@@ -161,12 +161,12 @@ $(function () {
     }
 
     async function api(payload) {
-        const res = await fetch('/projects/kanban/json/actions.php', {
+        const result = await fetch('/projects/kanban/json/actions.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-        return res.json();
+        return result.json();
     }
 
     async function init() {

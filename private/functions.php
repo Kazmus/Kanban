@@ -15,8 +15,8 @@ function getCards() {
     while ($row = mysqli_fetch_assoc($result)) {
         $cards[] = $row;
     }
-
     closeDB($conn);
+
     return $cards;
 }
 
@@ -96,4 +96,32 @@ function addUser(string $username, string $password, string $email) {
     mysqli_stmt_bind_param($stmt, "ssss", $username, $password, $email, $defaultType);
     mysqli_stmt_execute($stmt);
     closeDB($conn);
+}
+
+function getUsers() {
+    $conn = connectToDB();
+    $sql = "SELECT login.id, login.username, login.email, login.type FROM `login`";
+    $result = mysqli_query($conn, $sql);
+
+    $users = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $users[] = $row;
+    }
+    closeDB($conn);
+
+    return $users;
+}
+
+function var_dumpj($d, $e = null) {
+    echo "<pre><code>";
+    if($e == "e") {
+        echo $d;
+    } else {
+        if(is_array($d)) {
+        print_r($d);
+        } else {
+        var_dump($d);
+        }      
+    }
+    echo "</code></pre>";
 }
