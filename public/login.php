@@ -23,7 +23,7 @@ header('Pragma: no-cache');
         <p class="subtitle">Login</p>
         <p>Front-end : JS/Jquery - Back-end : PHP - DB : MySQL</p>
         <p>No AI was used</p>
-        <p>https://github.com/Kazmus/Kanban/</p>
+        <p><a style="text-decoration: none; color: white;" href="https://github.com/Kazmus/Kanban/" target="_blank">GitHub Repository</a></p>
     </header>
     <main class="login-board">
         <div class="login">
