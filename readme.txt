@@ -1,5 +1,7 @@
 # Kanban Board
 
+URL : https://mauriziodev.be/projects/kanban/index.php
+
 A simple, self-hosted Kanban board with drag-and-drop cards, user accounts, and an admin panel — built with vanilla PHP, jQuery, and MySQL.
 
 **Stack:** Front-end: JS/jQuery · Back-end: PHP · Database: MySQL
